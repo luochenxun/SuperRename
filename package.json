@@ -1,0 +1,39 @@
+{
+  "name": "superRename",
+  "version": "1.0.0",
+  "description": "SuperRename tool, can be used for folder organization of daily work , even software project renaming. \n超级重命名工具，可用于平时工作文件夹整理，甚至是软件项目的重命名",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "ts-node test.ts",
+    "pretest": "npm run build"
+  },
+  "bin": {
+    "superRename": "dist/index.js"
+  },
+  "author": "luochenxun (luochenxun@gmail.com)",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luochenxun/SuperRename.git"
+  },
+  "dependencies": {
+    "commander": "^7.1.0",
+    "inquirer": "^7.3.3",
+    "ora": "^5.3.0",
+    "progress": "^2.0.3",
+    "shelljs": "^0.8.4",
+    "url-search-params": "^1.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/inquirer": "^7.3.1",
+    "@types/shelljs": "^0.8.8",
+    "@types/url-search-params": "^1.1.0",
+    "rollup": "^2.39.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.1.5"
+  }
+}
