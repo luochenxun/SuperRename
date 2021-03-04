@@ -1,7 +1,10 @@
 # SuperRename `[latest version: v1.0.1]`
 
 SuperRename tool, can be used for folder organization of daily work , even software project renaming.
+
 超级重命名工具，可用于平时工作文件夹整理，甚至是软件项目的重命名
+
+```
 version: 1.0.1
 Usage: superRename [options] [command]
 
@@ -17,6 +20,7 @@ Commands:
   help [command]      display help for command
 
 运行 superRename -h | --help 查看命令使用。
+```
 
 ## Install
 
