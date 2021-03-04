@@ -73,78 +73,55 @@ program.addHelpText('after', `
 
 async function readMap() {
   const map: any = {}
-  let key, value;
 
-  do {
+  while (true) {
     const prompt = [
       {
         type: 'input',
         name: 'key',
-        default: 'end',
-        message: '请输入想要替换的字符, end 为结束',
-        validate: (value: string) => value.length > 0 || '不能为空'
-      },
+        message: '请输入想要替换的字符, 直接回车为结束',
+      }
+    ]
+    const { key } = await inquirer.prompt(prompt);
+    if (StringUtil.isEmpty(key)) {
+      break;
+    }
+
+    const promptValue = [
       {
         type: 'input',
         name: 'value',
-        message: '请输入想要替换成的字符',
-        validate: (value: string) => value.length > 0 || '不能为空'
+        message: `您想要将目录中所有的 '${key}' 替换成什么`,
       },
     ]
-
-    // AironeConfig
-    const result = await inquirer.prompt(prompt);
-    key = result.key
-    value = result.value
+    const { value } = await inquirer.prompt(promptValue);
 
     map[key] = value
-  } while (key != 'end');
+  }
 
   return map
 }
 
-async function renameProj(dir: string) {
-  const map = await readMap()
+async function renameProj(dir: string, map?: any) {
+  if (map == undefined) {
+    map = await readMap()
+  }
 
   var lsResult = fs.readdirSync(dir);
   lsResult.forEach(function (element, index) {
     const elementPath = path.join(dir, element)
     var info = fs.statSync(elementPath)
     // 文件名或目录名替换
-    let convertPath = elementPath
     Object.keys(map).forEach((key) => {
-      convertPath = elementPath.replace(key, map[key])
+      element = element.replace(key, map[key])
     })
+    let convertPath = path.join(dir, element)
     // 目录名替换
     if (convertPath != elementPath) {
       shelljs.mv(elementPath, convertPath)
     }
-    if (info.isDirectory()) { // 递归遍历目录
-      convertDir(convertPath, map)
-    } else {
-      Object.keys(map).forEach((key) => {
-        shelljs.sed('-i', key, map[key], convertPath);
-      })
-    }
-  })
-}
-
-function convertDir(dir: string, map: any) {
-  var lsResult = fs.readdirSync(dir);
-  lsResult.forEach(function (element, index) {
-    const elementPath = path.join(dir, element)
-    var info = fs.statSync(elementPath)
-    // 文件名或目录名替换
-    let convertPath = elementPath
-    Object.keys(map).forEach((key) => {
-      convertPath = elementPath.replace(key, map[key])
-    })
-    // 目录名替换
-    if (convertPath != elementPath) {
-      shelljs.mv(elementPath, convertPath)
-    }
-    if (info.isDirectory()) { // 递归遍历目录
-      convertDir(convertPath, map)
+    if (fs.statSync(convertPath).isDirectory()) { // 递归遍历目录
+      renameProj(convertPath, map)
     } else {
       Object.keys(map).forEach((key) => {
         shelljs.sed('-i', key, map[key], convertPath);
@@ -306,7 +283,7 @@ program
   .command('upgrade')
   .description('脚本自动升级')
   .action(() => {
-    checkAndAutoUpgrade()
+    checkAndAutoUpgrade(true)
   })
 
 //#endregion
@@ -315,17 +292,17 @@ program
 //#region [sub] command - Project
 
 program
-  .command('proj')
+  .command('proj [dir]')
   .description('给当前目录下的工程重命名')
-  .action(() => {
-    renameProj('./')
+  .action((dir) => {
+    renameProj(dir || './')
   })
 
 program
-  .command('project')
+  .command('project [dir]')
   .description('给当前目录下的工程重命名')
-  .action(() => {
-    renameProj('./')
+  .action((dir) => {
+    renameProj(dir || './')
   })
 
 //#endregion
