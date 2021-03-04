@@ -1,11 +1,9 @@
-# airone-cli `[latest version: v1.0.0]`
+# SuperRename `[latest version: v1.0.1]`
 
-> airone cli -- an amazing tool to generate hybrid modularized app or related module with one-key. 
->
-> airone -- 一键生成跨平台模块化app神器
-
-```
-Usage: airone [options] [command]
+SuperRename tool, can be used for folder organization of daily work , even software project renaming.
+超级重命名工具，可用于平时工作文件夹整理，甚至是软件项目的重命名
+version: 1.0.1
+Usage: superRename [options] [command]
 
 Options:
   -v, --version       output the current version （查看当前版本号）
@@ -14,15 +12,14 @@ Options:
 Commands:
   install|i [module]  install one or more air-module （安装air模块）
   upgrade             脚本自动升级
-  init                初始化 airone 项目
+  proj [dir]          给当前目录下的工程重命名
+  project [dir]       给当前目录下的工程重命名
   help [command]      display help for command
 
-运行 airone -h | --help 查看命令使用。
-也可使用如 airone install -h 查看单个命令的帮助
-```
+运行 superRename -h | --help 查看命令使用。
 
 ## Install
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/airone-app/airone-cli/master/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/luochenxun/SuperRename/master/install.sh)"
 ```
