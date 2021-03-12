@@ -124,7 +124,8 @@ async function renameProj(dir: string, map?: any) {
       renameProj(convertPath, map)
     } else {
       Object.keys(map).forEach((key) => {
-        shelljs.sed('-i', key, map[key], convertPath);
+        const reg = new RegExp(key, 'g');
+        shelljs.sed('-i', reg , map[key] , convertPath);
       })
     }
   })
