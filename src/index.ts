@@ -24,14 +24,13 @@ import { DateUtil, StringUtil } from './base'
 
 // 全局变量
 const USER_HOME = process.env.HOME || process.env.USERPROFILE || '~'
-const GLOBAL_DIR_NAME = '.' + pkg.name
+const GLOBAL_DIR_NAME = '.luochenxunTools'
 const GLOBAL_DIR = path.join(USER_HOME, GLOBAL_DIR_NAME)
 const GLOBAL_CONFIG_PATH = path.join(GLOBAL_DIR, 'config.json')
 const GLOBAL_REPOSITORY_DIR = path.join(GLOBAL_DIR, pkg.name)
 const GLOBAL_REPOSITORY_PACKAGE = path.join(GLOBAL_REPOSITORY_DIR, 'package.json')
 const PROJECT_DIR = shelljs.pwd().toString()
 const ERROR_MSG = `${pkg.name} 更新失败，请重试或手动更新`;
-const ROOT_TEMPLATE = 'http://git.jyblife.com/SuperRename/root-templete.git';
 
 // 新建 program 对象，全局命令行对象
 const program = new Command(pkg.name)
@@ -176,15 +175,15 @@ async function autoUpgrade() {
     shelljs.echo('本工具需要请安装 git，检查到系统尚未安装，请安装之.');
     shelljs.exit(1);
   }
-
   // 更新工具 git
   shelljs.cd(GLOBAL_DIR)
+
   if (fs.existsSync(GLOBAL_REPOSITORY_DIR)) { // 存在则进入目录，upgrade 之
     shelljs.cd(GLOBAL_REPOSITORY_DIR)
     await timeConsumingCmd(`git clean -df; git reset --hard HEAD 1>&- 2>&-`, '正在清理repository')
     await timeConsumingCmd(`git pull 1>&- 2>&-`, '正在拉取最新版本')
   } else { // 不存在则下载之
-    if ((await timeConsumingCmd(`git clone ${pkg.repository.url} repository 1>&- 2>&-`, '正在拉取最新版本')).code !== 0) {
+    if ((await timeConsumingCmd(`git clone ${pkg.repository.url} ${pkg.name} 1>&- 2>&-`, '正在拉取最新版本')).code !== 0) {
       shelljs.echo(ERROR_MSG);
       return;
     }
@@ -200,8 +199,8 @@ async function autoUpgrade() {
     shelljs.rm('-rf', GLOBAL_REPOSITORY_DIR)
     return;
   }
-  const projectPackage = toolsConfig[pkg.name]
-  const versionOfNewGit = projectPackage.version
+
+  const versionOfNewGit: string = toolsConfig['version']
   if (versionOfNewGit == pkg.version) {
     // 版本相同不需要升级
     console.log('当前已是最新版本，无需要更新 ^_^');
@@ -221,7 +220,7 @@ async function autoUpgrade() {
 }
 
 /** 读配置文件（如果不给地址，配置文件将默认存储在系统用户根目录） */
-const loadConfig = (configPath?: string): Config | null => {
+const loadConfig = (configPath?: string): Config | any => {
   let config: Config = {};
   config[pkg.name] = {
     version: pkg.version,
