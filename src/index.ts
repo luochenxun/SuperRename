@@ -124,7 +124,28 @@ async function renameProj(dir: string, map?: any) {
     } else {
       Object.keys(map).forEach((key) => {
         const reg = new RegExp(key, 'g');
-        shelljs.sed('-i', reg , map[key] , convertPath);
+        shelljs.sed('-i', reg, map[key], convertPath);
+      })
+    }
+  })
+}
+
+async function renameImage(dir: string) {
+  var lsResult = fs.readdirSync(dir);
+  lsResult.forEach(function (element, index) {
+    const imageDir = path.join(dir, element)
+    if (fs.statSync(imageDir).isDirectory()) { // 如果是图片文件夹，遍历内部图片并移出
+      var lsResult = fs.readdirSync(imageDir);
+      lsResult.forEach(function (imgDirItem, imgDirIndex) {
+        const imgFile = path.join(imageDir, imgDirItem)
+        if (imgFile.endsWith('.png')) { // 是图片
+          console.log('文件夹名：', element.substring(0, element.indexOf('.')));
+          let imageName = element.substring(0, element.indexOf('.')); // 图片名
+          // 图片名再加上分辨率
+          imageName += imgDirItem.substring(imgDirItem.indexOf('@'))
+          console.log(`找到图片 ${imgDirItem}(${imgFile}) --> 改名为 ${imageName}`);
+          shelljs.mv(imgFile, imageName)
+        }
       })
     }
   })
@@ -303,6 +324,13 @@ program
   .description('给当前目录下的工程重命名')
   .action((dir) => {
     renameProj(dir || './')
+  })
+
+program
+  .command('img [dir]')
+  .description('给当前目录下的工程ios图片重命名并移出')
+  .action((dir) => {
+    renameImage(dir || './')
   })
 
 //#endregion
