@@ -31,7 +31,7 @@ const GLOBAL_REPOSITORY_DIR = path.join(GLOBAL_DIR, pkg.name)
 const GLOBAL_REPOSITORY_PACKAGE = path.join(GLOBAL_REPOSITORY_DIR, 'package.json')
 const PROJECT_DIR = shelljs.pwd().toString()
 const ERROR_MSG = `${pkg.name} 更新失败，请重试或手动更新`;
-const ROOT_TEMPLATE = 'http://git.jyblife.com/SuperRename/root-templete.git';
+const ROOT_TEMPLATE = 'http://git.luochenxun.com/SuperRename/root-templete.git';
 
 // 新建 program 对象，全局命令行对象
 const program = new Command(pkg.name)
